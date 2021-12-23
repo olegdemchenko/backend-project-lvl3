@@ -1,0 +1,20 @@
+{
+  "name": "@hexlet/code",
+  "version": "0.1.1",
+  "description": "Web page downloader",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olegdemchenko/backend-project-lvl3.git"
+  },
+  "author": "Oleh Demchenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olegdemchenko/backend-project-lvl3/issues"
+  },
+  "homepage": "https://github.com/olegdemchenko/backend-project-lvl3#readme"
+}
