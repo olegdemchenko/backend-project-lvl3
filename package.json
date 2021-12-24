@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/olegdemchenko/backend-project-lvl3/issues"
   },
-  "homepage": "https://github.com/olegdemchenko/backend-project-lvl3#readme"
+  "homepage": "https://github.com/olegdemchenko/backend-project-lvl3#readme",
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "babel-jest": "^27.4.5",
+    "jest": "^27.4.5",
+    "jest-cli": "^27.4.5",
+    "nock": "^13.2.1"
+  }
 }
