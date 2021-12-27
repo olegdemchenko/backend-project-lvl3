@@ -29,9 +29,9 @@ afterAll(() => {
 
 test('testing main functionality', async () => {
   nock(links.wiki)
-    .get('/wiki')
+    .get('/')
     .reply(200, template);
-  const pagePath = await downloadPage(tempDirPath, links.wiki + '/wiki');
+  const pagePath = await downloadPage(tempDirPath, links.wiki);
   const downloadedPage = await fs.readFile(pagePath, 'utf-8');
   expect(downloadedPage).toEqual(template);
 });
