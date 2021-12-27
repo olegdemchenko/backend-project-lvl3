@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { program } from "commander";
-import downloadPage from "../downloadPage.js";
+import { program } from 'commander';
+import downloadPage from '../downloadPage';
 
 program.version('1.0.0')
   .description('Page loader utility')
@@ -10,7 +10,7 @@ program.version('1.0.0')
     let res;
     try {
       res = `Page was successfully saved into '${await downloadPage(output, url)}'`;
-    } catch(e) {
+    } catch (e) {
       res = `Error: ${e.message}`;
     }
     console.log(res);

@@ -4,15 +4,14 @@ import os from 'os';
 import nock from 'nock';
 
 import downloadPage from '../src/downloadPage';
-import { rejects } from 'assert';
 
 let template;
 let tempDirPath;
 
 const links = {
-  wiki: "https://en.wikipedia.org",
-  empty: "https://some-unexisting-page",
-}
+  wiki: 'https://en.wikipedia.org',
+  empty: 'https://some-unexisting-page',
+};
 
 beforeAll(async () => {
   nock.disableNetConnect();
@@ -25,7 +24,7 @@ beforeEach(async () => {
 
 afterAll(() => {
   nock.enableNetConnect();
-})
+});
 
 test('testing main functionality', async () => {
   nock(links.wiki)
@@ -36,10 +35,9 @@ test('testing main functionality', async () => {
   expect(downloadedPage).toEqual(template);
 });
 
-test('test error handling', async () => {
+test('testing error handling', async () => {
   nock(links.empty)
     .get('/')
     .reply(404, 'Not found');
   await expect(downloadPage(tempDirPath, links.empty)).rejects.toThrow();
 });
-

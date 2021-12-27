@@ -2,14 +2,12 @@ import axios from 'axios';
 import fs from 'fs/promises';
 import path from 'path';
 
-export default (outputPath, pageUrl) => {
-  return axios.get(pageUrl)
-    .then(({ data }) => {
-      return data;
-    })
+export default (outputPath, pageUrl) => (
+  axios.get(pageUrl)
+    .then(({ data }) => data)
     .then((pageData) => {
       const resource = pageUrl.match(/\w+:\/\/(\S+)/i)[1];
-      const pageName = resource.replace(/[^a-zA-Z0-9]/g, '-') + '.html';
+      const pageName = `${resource.replace(/[^a-zA-Z0-9]/g, '-')}.html`;
       const fullPath = path.join(outputPath, pageName);
       return fs.writeFile(fullPath, pageData)
         .then(() => fullPath);
@@ -18,4 +16,4 @@ export default (outputPath, pageUrl) => {
       console.log(e);
       throw e;
     })
-};
+);
