@@ -1,2 +1,9 @@
+install:
+	npm ci
 test:
-		npm test
+	npm test
+lint:
+	npx eslint .
+publish:
+	npm publish
+	
