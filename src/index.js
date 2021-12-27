@@ -1,3 +1,3 @@
-export default async (outputPath, pageUrl) => {
+import downloadPage from "./downloadPage.js";
 
-};
+export default downloadPage;
