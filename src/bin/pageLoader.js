@@ -9,9 +9,9 @@ program.version('1.0.0')
   .action(async (url, { output }) => {
     let res;
     try {
-      res = await downloadPage(output, url);
+      res = `Page was successfully saved into '${await downloadPage(output, url)}'`;
     } catch(e) {
-      res = e.message;
+      res = `Error: ${e.message}`;
     }
     console.log(res);
   })
