@@ -23,12 +23,14 @@ jobs:
         cache: 'npm'
     - name: install dependencies
       run: make install
+      env: 
+        CI: true
     - name: run tests
       run: make test
     - name: run linter
       run: make lint
     - name: test coverage
-      uses: paambaati/codeclimate-action@2.7.5
+    - uses: paambaati/codeclimate-action@v3.0.0
       env:
         CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
       with:
