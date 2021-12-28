@@ -17,7 +17,7 @@
     "url": "https://github.com/olegdemchenko/backend-project-lvl3/issues"
   },
   "bin": {
-    "page-loader": "src/bin/pageLoader.js"
+    "page-loader": "bin/pageLoader.js"
   },
   "homepage": "https://github.com/olegdemchenko/backend-project-lvl3#readme",
   "devDependencies": {
