@@ -1,5 +1,6 @@
 plugins:
   - jest
+  - import
 env:
   browser: true
   es2021: true
@@ -10,5 +11,6 @@ parserOptions:
   ecmaVersion: 13
   sourceType: module
 rules: {
-  linebreak-style: 0
+  linebreak-style: 0,
+  import/extensions: ["error", { "js": "always" }]
 }

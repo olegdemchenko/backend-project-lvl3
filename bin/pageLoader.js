@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { program } from 'commander';
-import downloadPage from '../downloadPage';
+import downloadPage from '../src/downloadPage.js';
 
 program.version('1.0.0')
   .description('Page loader utility')

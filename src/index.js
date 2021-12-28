@@ -1,3 +1,3 @@
-import downloadPage from './downloadPage';
+import downloadPage from './downloadPage.js';
 
 export default downloadPage;
