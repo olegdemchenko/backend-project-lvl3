@@ -3,7 +3,7 @@ import path from 'path';
 import os from 'os';
 import nock from 'nock';
 
-import downloadPage from '../src/downloadPage';
+import downloadPage from '../src/downloadPage.js';
 
 let template;
 let tempDirPath;
