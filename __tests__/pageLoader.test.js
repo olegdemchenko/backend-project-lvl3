@@ -9,13 +9,13 @@ let template;
 let tempDirPath;
 
 const links = {
-  wiki: 'https://en.wikipedia.org',
+  textPage: 'https://textpage.org',
   empty: 'https://some-unexisting-page',
 };
 
 beforeAll(async () => {
   nock.disableNetConnect();
-  template = await fs.readFile(`${__dirname}/../__fixtures__/wikipedia.html`, 'utf-8');
+  template = await fs.readFile(`${__dirname}/../__fixtures__/textpage.html`, 'utf-8');
 });
 
 beforeEach(async () => {
@@ -27,10 +27,10 @@ afterAll(() => {
 });
 
 test('testing main functionality', async () => {
-  nock(links.wiki)
+  nock(links.textPage)
     .get('/')
     .reply(200, template);
-  const pagePath = await downloadPage(tempDirPath, links.wiki);
+  const pagePath = await downloadPage(tempDirPath, links.textPage);
   const downloadedPage = await fs.readFile(pagePath, 'utf-8');
   expect(downloadedPage).toEqual(template);
 });
