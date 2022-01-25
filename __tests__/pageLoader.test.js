@@ -4,6 +4,7 @@ import os from 'os';
 import nock from 'nock';
 
 import downloadPage from '../src/downloadPage.js';
+import formatFileName from '../src/utils.js';
 
 let textPage;
 let pageWithImage;
@@ -53,7 +54,8 @@ test('testing downloading image', async () => {
     .reply(200, image);
   const pagePath = await downloadPage(tempDirPath, links.pageWithImage);
   const pageAssetsPath = pagePath.replace('.html', '_files');
-  const imagePath = path.join(pageAssetsPath, 'ru-hexlet-io-assets-professions-nodejs.png');
+  const imageName = formatFileName(path.join(links.pageWithImage, links.image));
+  const imagePath = path.join(pageAssetsPath, imageName);
   const downloadedPage = await fs.readFile(pagePath);
   const downloadedImage = await fs.readFile(imagePath);
   expect(downloadedPage).toEqual(pageWithLocalImage);
