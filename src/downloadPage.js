@@ -1,19 +1,28 @@
 import axios from 'axios';
-import fs from 'fs/promises';
-import path from 'path';
 
-export default (outputPath, pageUrl) => (
-  axios.get(pageUrl)
-    .then(({ data }) => data)
-    .then((pageData) => {
-      const resource = pageUrl.match(/\w+:\/\/(\S+)/i)[1];
-      const pageName = `${resource.replace(/[^a-zA-Z0-9]/g, '-')}.html`;
-      const fullPath = path.join(outputPath, pageName);
-      return fs.writeFile(fullPath, pageData)
-        .then(() => fullPath);
+import {
+  createAssetFolder,
+  savePage,
+} from './utils.js';
+import saveImages from './saveImages.js';
+
+export default (outputPath, pageUrl) => {
+  let assetFolderPath;
+  let assetFolderName;
+  let page;
+  return axios.get(pageUrl)
+    .then(({ data }) => {
+      page = data;
+      return createAssetFolder(pageUrl, outputPath);
     })
+    .then(({ folderName, folderPath }) => {
+      assetFolderName = folderName;
+      assetFolderPath = folderPath;
+      return saveImages(page, pageUrl, assetFolderName, assetFolderPath);
+    })
+    .then((changedPage) => savePage(changedPage, pageUrl, outputPath))
     .catch((e) => {
       console.log(e);
       throw e;
-    })
-);
+    });
+};
