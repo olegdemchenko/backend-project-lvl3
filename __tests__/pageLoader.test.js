@@ -4,7 +4,7 @@ import os from 'os';
 import nock from 'nock';
 
 import downloadPage from '../src/downloadPage.js';
-import formatFileName from '../src/utils.js';
+import { formatAssetName, deleteProtocolFromUrl } from '../src/utils.js';
 
 let textPage;
 let pageWithImage;
@@ -48,16 +48,18 @@ test('testing main functionality', async () => {
 
 test('testing downloading image', async () => {
   nock(links.pageWithImage)
-    .get('/courses')
+    .get('/')
     .reply(200, pageWithImage)
     .get(links.image)
     .reply(200, image);
   const pagePath = await downloadPage(tempDirPath, links.pageWithImage);
   const pageAssetsPath = pagePath.replace('.html', '_files');
-  const imageName = formatFileName(path.join(links.pageWithImage, links.image));
+  const imageName = formatAssetName(
+    deleteProtocolFromUrl(new URL(links.image, links.pageWithImage).href),
+  );
   const imagePath = path.join(pageAssetsPath, imageName);
-  const downloadedPage = await fs.readFile(pagePath);
-  const downloadedImage = await fs.readFile(imagePath);
+  const downloadedPage = await fs.readFile(pagePath, 'utf-8');
+  const downloadedImage = await fs.readFile(imagePath, 'utf-8');
   expect(downloadedPage).toEqual(pageWithLocalImage);
   expect(downloadedImage).toEqual(image);
 });
