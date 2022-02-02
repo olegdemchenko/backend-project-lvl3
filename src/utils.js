@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs/promises';
+import axios from 'axios';
 
 export const deleteProtocolFromUrl = (url) => {
   if (url.startsWith('/')) {
@@ -39,3 +40,23 @@ export const formatAssetName = (filePath) => {
   const { dir, base } = path.parse(filePath);
   return `${dir.replace(/[^a-zA-Z0-9]/g, '-')}-${base}`;
 };
+
+export const downloadAssets = (urls, assetFolderPath) => (
+  Promise.all(urls.map((url) => (
+    axios.get(url, { responseType: 'arraybuffer' })
+  )))
+    .then((resp) => {
+      const assets = resp.map(({ config: { url }, data }) => ({
+        url,
+        data,
+      }));
+      const assetsWithPaths = assets.map(({ url, data }) => {
+        const name = formatAssetName(deleteProtocolFromUrl(url));
+        const assetPath = path.join(assetFolderPath, name);
+        return { filePath: assetPath, data };
+      });
+      return Promise.all(assetsWithPaths.map(({ filePath, data }) => (
+        fs.writeFile(filePath, data)
+      )));
+    })
+);
