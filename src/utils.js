@@ -24,7 +24,7 @@ export const createAssetFolder = (url, outputPath) => {
   const folderPath = path.join(outputPath, folderName);
   return fs.mkdir(folderPath)
     .then(() => ({
-      folderName, folderPath,
+      folderPath,
     }));
 };
 

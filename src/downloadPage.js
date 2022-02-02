@@ -1,4 +1,5 @@
 import axios from 'axios';
+import path from 'path';
 
 import {
   createAssetFolder,
@@ -15,8 +16,8 @@ export default (outputPath, pageUrl) => {
       page = data;
       return createAssetFolder(pageUrl, outputPath);
     })
-    .then(({ folderName, folderPath }) => {
-      assetFolderName = folderName;
+    .then(({ folderPath }) => {
+      assetFolderName = path.parse(folderPath).name;
       assetFolderPath = folderPath;
       return saveImages(page, pageUrl, assetFolderName, assetFolderPath);
     })
