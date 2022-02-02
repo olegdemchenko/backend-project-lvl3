@@ -14,7 +14,7 @@ let tempDirPath;
 
 const links = {
   textPage: 'https://textpage.org',
-  pageWithImage: 'https://ru.hexlet.io',
+  pageWithAsset: 'https://ru.hexlet.io',
   image: '/assets/professions/nodejs.png',
   empty: 'https://some-unexisting-page',
 };
@@ -47,15 +47,15 @@ test('testing main functionality', async () => {
 });
 
 test('testing downloading image', async () => {
-  nock(links.pageWithImage)
+  nock(links.pageWithAsset)
     .get('/')
     .reply(200, pageWithImage)
     .get(links.image)
     .reply(200, image);
-  const pagePath = await downloadPage(tempDirPath, links.pageWithImage);
+  const pagePath = await downloadPage(tempDirPath, links.pageWithAsset);
   const pageAssetsPath = pagePath.replace('.html', '_files');
   const imageName = formatAssetName(
-    deleteProtocolFromUrl(new URL(links.image, links.pageWithImage).href),
+    deleteProtocolFromUrl(new URL(links.image, links.pageWithAsset).href),
   );
   const imagePath = path.join(pageAssetsPath, imageName);
   const downloadedPage = await fs.readFile(pagePath, 'utf-8');
