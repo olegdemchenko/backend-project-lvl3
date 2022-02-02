@@ -4,11 +4,14 @@ import os from 'os';
 import nock from 'nock';
 
 import downloadPage from '../src/downloadPage.js';
-import { formatAssetName, deleteProtocolFromUrl } from '../src/utils.js';
+import { formatAssetName, deleteProtocolFromUrl, createPageName } from '../src/utils.js';
 
 let textPage;
 let pageWithImage;
 let pageWithLocalImage;
+let pageWithStyle;
+let pageWithLocalStyle;
+let style;
 let image;
 let tempDirPath;
 
@@ -16,6 +19,7 @@ const links = {
   textPage: 'https://textpage.org',
   pageWithAsset: 'https://ru.hexlet.io',
   image: '/assets/professions/nodejs.png',
+  style: '/assets/application.css',
   empty: 'https://some-unexisting-page',
 };
 
@@ -26,6 +30,9 @@ beforeAll(async () => {
   textPage = await fs.readFile(getFixturePath('textpage.html'), 'utf-8');
   pageWithImage = await fs.readFile(getFixturePath('pagewithimage.html'), 'utf-8');
   pageWithLocalImage = await fs.readFile(getFixturePath('pagewithlocalimage.html'), 'utf-8');
+  pageWithStyle = await fs.readFile(getFixturePath('pagewithlinks.html'), 'utf-8');
+  pageWithLocalStyle = await fs.readFile(getFixturePath('pagewithlocallinks.html'), 'utf-8');
+  style = await fs.readFile(getFixturePath('application.css'), 'utf-8');
   image = await fs.readFile(getFixturePath('nodejs.png'), 'utf-8');
 });
 
@@ -62,6 +69,30 @@ test('testing downloading image', async () => {
   const downloadedImage = await fs.readFile(imagePath, 'utf-8');
   expect(downloadedPage).toEqual(pageWithLocalImage);
   expect(downloadedImage).toEqual(image);
+});
+
+test('testing downloading styles', async () => {
+  nock(links.pageWithAsset)
+    .get('/')
+    .reply(200, pageWithStyle)
+    .get(links.style)
+    .reply(200, style)
+    .get('/')
+    .reply(200, pageWithStyle);
+  const pagePath = await downloadPage(tempDirPath, links.pageWithAsset);
+  const pageAssetsPath = pagePath.replace('.html', '_files');
+  const styleName = formatAssetName(
+    deleteProtocolFromUrl(new URL(links.style, links.pageWithAsset).href),
+  );
+  const stylePath = path.join(pageAssetsPath, styleName);
+  const canonicalPageName = createPageName(links.pageWithAsset);
+  const canonicalPagePath = path.join(pageAssetsPath, canonicalPageName);
+  const downloadedPage = await fs.readFile(pagePath, 'utf-8');
+  const downloadedImage = await fs.readFile(stylePath, 'utf-8');
+  const downloadedCanonicalPage = await fs.readFile(canonicalPagePath, 'utf-8');
+  expect(downloadedPage).toEqual(pageWithLocalStyle);
+  expect(downloadedImage).toEqual(style);
+  expect(downloadedCanonicalPage).toEqual(pageWithStyle);
 });
 
 test('testing error handling', async () => {
