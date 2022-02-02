@@ -13,12 +13,7 @@ const getImagesUrls = ($, pageUrl) => {
   const imagesSources = $('img').map(function () {
     return $(this).attr('src');
   }).get();
-  const imagesSourcesWithAbsolutePaths = imagesSources.map((url) => {
-    if (url.startsWith('/')) {
-      return new URL(url, origin).href;
-    }
-    return url;
-  });
+  const imagesSourcesWithAbsolutePaths = imagesSources.map((url) => new URL(url, origin).href);
   return imagesSourcesWithAbsolutePaths;
 };
 
