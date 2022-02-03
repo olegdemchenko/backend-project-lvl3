@@ -88,3 +88,28 @@ export const downloadAssets = (urls, assetFolderPath) => (
       )));
     })
 );
+
+export const changeAssetsPaths = (page, assetsUrls, assetType, assetFolderName) => {
+  const attributesMap = {
+    link: 'href',
+    img: 'src',
+    script: 'src',
+  };
+  const newPaths = assetsUrls.map(({ url, id }) => {
+    const ext = path.extname(new URL(url).pathname);
+    const name = ext ? formatAssetName(deleteProtocolFromUrl(url)) : createPageName(url);
+    return {
+      url: path.join(assetFolderName, name),
+      id,
+    };
+  });
+  const $ = cheerio.load(page);
+  $(assetType).each(function (index) {
+    const correspondingSrc = newPaths.find(({ id }) => id === index);
+    if (!correspondingSrc) {
+      return;
+    }
+    $(this).attr(attributesMap[assetType], correspondingSrc.url);
+  });
+  return $.root().html();
+};
