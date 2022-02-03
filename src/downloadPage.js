@@ -25,7 +25,7 @@ export default (outputPath, pageUrl) => {
     .then((changedPage) => saveStyles(changedPage, pageUrl, assetFolderName, assetFolderPath))
     .then((changedPage) => savePage(changedPage, pageUrl, outputPath))
     .catch((e) => {
-      //console.log(e);
+      console.log(e);
       throw e;
     });
 };
