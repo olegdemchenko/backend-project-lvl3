@@ -5,15 +5,8 @@ import {
   formatAssetName,
   deleteProtocolFromUrl,
   downloadAssets,
+  retrieveAssetUrls,
 } from './utils.js';
-
-const getImagesUrls = ($, pageUrl) => {
-  const { origin } = new URL(pageUrl);
-  return $('img').map(function () {
-    return $(this).attr('src');
-  }).get()
-    .map((url) => new URL(url, origin).href);
-};
 
 const changeImagesSources = ($, imagesUrls, assetFolderName) => {
   const newSrc = imagesUrls.map((url) => {
@@ -28,9 +21,9 @@ const changeImagesSources = ($, imagesUrls, assetFolderName) => {
 
 export default (page, pageUrl, assetFolderName, assetFolderPath) => {
   const $ = cheerio.load(page);
-  const imagesUrls = getImagesUrls($, pageUrl);
-  return downloadAssets(imagesUrls, assetFolderPath)
+  const imagesUrls = retrieveAssetUrls(page, pageUrl, 'img', 'all');
+  return downloadAssets(imagesUrls.map(({ url }) => url), assetFolderPath)
     .then(() => (
-      changeImagesSources($, imagesUrls, assetFolderName)
+      changeImagesSources($, imagesUrls.map(({ url }) => url), assetFolderName)
     ));
 };

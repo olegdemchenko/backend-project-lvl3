@@ -6,22 +6,8 @@ import {
   deleteProtocolFromUrl,
   downloadAssets,
   createPageName,
+  retrieveAssetUrls,
 } from './utils.js';
-
-const getStylesUrls = ($, pageUrl) => {
-  const { origin, host: baseHost } = new URL(pageUrl);
-  return $('link').map(function (index) {
-    return {
-      id: index,
-      url: $(this).attr('href'),
-    };
-  }).get()
-    .map(({ url, id }) => ({
-      url: new URL(url, origin).href,
-      id,
-    }))
-    .filter(({ url }) => new URL(url).host === baseHost);
-};
 
 const changeStylesSources = ($, stylesUrls, assetFolderName) => {
   const newSrc = stylesUrls.map(({ url, id }) => {
@@ -44,7 +30,7 @@ const changeStylesSources = ($, stylesUrls, assetFolderName) => {
 
 export default (page, pageUrl, assetFolderName, assetFolderPath) => {
   const $ = cheerio.load(page);
-  const stylesUrls = getStylesUrls($, pageUrl);
+  const stylesUrls = retrieveAssetUrls(page, pageUrl, 'link', 'local');
   return downloadAssets(stylesUrls.map(({ url }) => url), assetFolderPath)
     .then(() => (
       changeStylesSources($, stylesUrls, assetFolderName)

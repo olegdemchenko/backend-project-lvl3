@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 import axios from 'axios';
+import cheerio from 'cheerio';
 
 export const deleteProtocolFromUrl = (url) => {
   if (url.startsWith('/')) {
@@ -39,6 +40,32 @@ export const savePage = (page, pageUrl, outputPath) => {
 export const formatAssetName = (filePath) => {
   const { dir, base } = path.parse(filePath);
   return `${dir.replace(/[^a-zA-Z0-9]/g, '-')}-${base}`;
+};
+
+export const retrieveAssetUrls = (page, pageUrl, assetTag, assetType) => {
+  const attributesMap = {
+    link: 'href',
+    img: 'src',
+    script: 'src',
+  };
+  const $ = cheerio.load(page);
+  const { origin, host: baseHost } = new URL(pageUrl);
+  return $(assetTag).map(function (index) {
+    return {
+      id: index,
+      url: $(this).attr(attributesMap[assetTag]),
+    };
+  }).get()
+    .map(({ url, id }) => ({
+      url: new URL(url, origin).href,
+      id,
+    }))
+    .filter(({ url }) => {
+      if (assetType === 'all') {
+        return true;
+      }
+      return new URL(url).host === baseHost;
+    });
 };
 
 export const downloadAssets = (urls, assetFolderPath) => (
