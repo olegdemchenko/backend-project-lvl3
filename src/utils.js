@@ -13,7 +13,7 @@ export const deleteProtocolFromUrl = (url) => {
 
 const createName = (url) => {
   const resource = deleteProtocolFromUrl(url);
-  return resource.replace(/[^a-zA-Z0-9]/g, '-');
+  return resource.replace(/\/$/, '').replace(/[^a-zA-Z0-9]/g, '-');
 };
 
 export const createPageName = (url) => `${createName(url)}.html`;
@@ -51,7 +51,8 @@ export const downloadAssets = (urls, assetFolderPath) => (
         data,
       }));
       const assetsWithPaths = assets.map(({ url, data }) => {
-        const name = formatAssetName(deleteProtocolFromUrl(url));
+        const ext = path.extname(new URL(url).pathname);
+        const name = ext ? formatAssetName(deleteProtocolFromUrl(url)) : createPageName(url);
         const assetPath = path.join(assetFolderPath, name);
         return { filePath: assetPath, data };
       });
