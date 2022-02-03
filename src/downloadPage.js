@@ -7,6 +7,7 @@ import {
 } from './utils.js';
 import saveImages from './saveImages.js';
 import saveStyles from './saveStyles.js';
+import saveScripts from './saveScripts.js';
 
 export default (outputPath, pageUrl) => {
   let assetFolderPath;
@@ -23,6 +24,7 @@ export default (outputPath, pageUrl) => {
       return saveImages(page, pageUrl, assetFolderName, assetFolderPath);
     })
     .then((changedPage) => saveStyles(changedPage, pageUrl, assetFolderName, assetFolderPath))
+    .then((changedPage) => saveScripts(changedPage, pageUrl, assetFolderName, assetFolderPath))
     .then((changedPage) => savePage(changedPage, pageUrl, outputPath))
     .catch((e) => {
       console.log(e);
