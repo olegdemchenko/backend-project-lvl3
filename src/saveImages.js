@@ -9,11 +9,10 @@ import {
 
 const getImagesUrls = ($, pageUrl) => {
   const { origin } = new URL(pageUrl);
-  const imagesSources = $('img').map(function () {
+  return $('img').map(function () {
     return $(this).attr('src');
-  }).get();
-  const imagesSourcesWithAbsolutePaths = imagesSources.map((url) => new URL(url, origin).href);
-  return imagesSourcesWithAbsolutePaths;
+  }).get()
+    .map((url) => new URL(url, origin).href);
 };
 
 const changeImagesSources = ($, imagesUrls, assetFolderName) => {

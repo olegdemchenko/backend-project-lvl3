@@ -10,20 +10,17 @@ import {
 
 const getStylesUrls = ($, pageUrl) => {
   const { origin, host: baseHost } = new URL(pageUrl);
-  const stylesSources = $('link').map(function (index) {
+  return $('link').map(function (index) {
     return {
       id: index,
       url: $(this).attr('href'),
     };
-  }).get();
-  const stylesSourcesWithAbsolutePaths = stylesSources
+  }).get()
     .map(({ url, id }) => ({
       url: new URL(url, origin).href,
       id,
-    }));
-  const stylesSourcesFromBaseHost = stylesSourcesWithAbsolutePaths
+    }))
     .filter(({ url }) => new URL(url).host === baseHost);
-  return stylesSourcesFromBaseHost;
 };
 
 const changeStylesSources = ($, stylesUrls, assetFolderName) => {
