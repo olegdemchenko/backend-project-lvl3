@@ -11,7 +11,10 @@ let pageWithImage;
 let pageWithLocalImage;
 let pageWithStyle;
 let pageWithLocalStyle;
+let pageWithScript;
+let pageWithLocalScript;
 let style;
+let script;
 let image;
 let tempDirPath;
 
@@ -20,6 +23,7 @@ const links = {
   pageWithAsset: 'https://ru.hexlet.io',
   image: '/assets/professions/nodejs.png',
   style: '/assets/application.css',
+  script: '/packs/js/runtime.js',
   empty: 'https://some-unexisting-page',
 };
 
@@ -32,6 +36,9 @@ beforeAll(async () => {
   pageWithLocalImage = await fs.readFile(getFixturePath('pagewithlocalimage.html'), 'utf-8');
   pageWithStyle = await fs.readFile(getFixturePath('pagewithlinks.html'), 'utf-8');
   pageWithLocalStyle = await fs.readFile(getFixturePath('pagewithlocallinks.html'), 'utf-8');
+  pageWithScript = await fs.readFile(getFixturePath('pagewithscripts.html', 'utf-8'));
+  pageWithLocalScript = await fs.readFile(getFixturePath('pagewithlocalscript'), 'utf-8');
+  script = await fs.readFile(getFixturePath('runtime.js'), 'utf-8');
   style = await fs.readFile(getFixturePath('application.css'), 'utf-8');
   image = await fs.readFile(getFixturePath('nodejs.png'), 'utf-8');
 });
@@ -93,6 +100,24 @@ test('testing downloading styles', async () => {
   expect(downloadedPage).toEqual(pageWithLocalStyle);
   expect(downloadedImage).toEqual(style);
   expect(downloadedCanonicalPage).toEqual(pageWithStyle);
+});
+
+test('testing downloading scripts', async () => {
+  nock(links.pageWithAsset)
+    .get('/')
+    .reply(200, pageWithScript)
+    .get(links.script)
+    .reply(200, script);
+  const pagePath = await downloadPage(tempDirPath, links.pageWithAsset);
+  const pageAssetsPath = pagePath.replace('.html', '_files');
+  const scriptName = formatAssetName(
+    deleteProtocolFromUrl(new URL(links.script, links.pageWithAsset).href),
+  );
+  const scriptPath = path.join(pageAssetsPath, scriptName);
+  const downloadedPage = await fs.readFile(pagePath, 'utf-8');
+  const downloadedScript = await fs.readFile(scriptPath, 'utf-8');
+  expect(downloadedPage).toEqual(pageWithLocalScript);
+  expect(downloadedScript).toEqual(script);
 });
 
 test('testing error handling', async () => {
