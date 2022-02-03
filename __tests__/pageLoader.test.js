@@ -95,10 +95,10 @@ test('testing downloading styles', async () => {
   const canonicalPageName = createPageName(links.pageWithAsset);
   const canonicalPagePath = path.join(pageAssetsPath, canonicalPageName);
   const downloadedPage = await fs.readFile(pagePath, 'utf-8');
-  const downloadedImage = await fs.readFile(stylePath, 'utf-8');
+  const downloadedStyle = await fs.readFile(stylePath, 'utf-8');
   const downloadedCanonicalPage = await fs.readFile(canonicalPagePath, 'utf-8');
   expect(downloadedPage).toEqual(pageWithLocalStyle);
-  expect(downloadedImage).toEqual(style);
+  expect(downloadedStyle).toEqual(style);
   expect(downloadedCanonicalPage).toEqual(pageWithStyle);
 });
 
